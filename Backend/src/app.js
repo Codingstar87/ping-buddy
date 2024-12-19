@@ -1,4 +1,3 @@
-// import { app } from "./lib/socket.js";
 import express from "express" ;
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -13,10 +12,9 @@ const app = express()
 
 
 app.use(cors({
-    // origin :  "https://ping-buddy-yze1.vercel.app" ,
-    origin :  ['https://ping-buddy.vercel.app', 'http://localhost:5173'] ,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials : true
+  origin :['http://localhost:5173'],
+  // methods: ["GET", "POST"],
+  // credentials : true
 }))
 
 
@@ -25,10 +23,10 @@ app.use(cors({
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    // origin: ["https://ping-buddy-yze1.vercel.app"] ,  
-    origin :  ['https://ping-buddy.vercel.app', 'http://localhost:5173'] ,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials : true
+    origin: ['http://localhost:5173'],  
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+    // credentials :true
   }
 });
 
@@ -69,12 +67,17 @@ import messageRoutes from "../src/routes/message.routes.js"
 app.use("/v1/api/messages", messageRoutes)
 
 
+
+const __dirname = path.resolve(); 
+
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  
+    
+    app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+
     app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
     });
-  }
+}
 
 export  {app , io , server }
