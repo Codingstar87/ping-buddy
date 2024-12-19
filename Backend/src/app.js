@@ -10,24 +10,21 @@ dotenv.config()
 
 const app = express()
 
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5173',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+  // credentials: true // Uncomment if you need credentials (cookies, authorization headers)
+};
 
-app.use(cors({
-  origin :['http://localhost:5173'],
-  // methods: ["GET", "POST"],
-  // credentials : true
-}))
+app.use(cors((corsOptions)))
 
 
 
 
 const server = createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: ['http://localhost:5173'],  
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-    // credentials :true
-  }
+  cors: corsOptions
 });
 
 
