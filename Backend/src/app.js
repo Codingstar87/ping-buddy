@@ -2,7 +2,8 @@ import express from "express" ;
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
-import path from "node:path";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import { createServer } from 'node:http';
 import dotenv from "dotenv" ;
@@ -70,6 +71,8 @@ import messageRoutes from "../src/routes/message.routes.js"
 app.use("/v1/api/messages", messageRoutes)
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 if (process.env.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "../../frontend/dist");
