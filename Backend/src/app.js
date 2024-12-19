@@ -11,12 +11,13 @@ dotenv.config()
 const app = express()
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5173',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-  // credentials: true // Uncomment if you need credentials (cookies, authorization headers)
+  origin: process.env.NODE_ENV === "production" 
+    ? false 
+    : "http://localhost:5173", 
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
 };
-
 app.use(cors((corsOptions)))
 
 
@@ -24,7 +25,12 @@ app.use(cors((corsOptions)))
 
 const server = createServer(app);
 const io = new Server(server, {
-  cors: corsOptions
+  cors: process.env.NODE_ENV === "production" 
+    ? false 
+    : {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+      },
 });
 
 
@@ -65,16 +71,13 @@ app.use("/v1/api/messages", messageRoutes)
 
 
 
-const __dirname = path.resolve(); 
-
 if (process.env.NODE_ENV === "production") {
-    
-    app.use(express.static(path.join(__dirname, "frontend", "dist")));
+  const frontendPath = path.join(__dirname, "../../frontend/dist");
+  app.use(express.static(frontendPath));
 
-
-    app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-    });
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
 }
 
 export  {app , io , server }
