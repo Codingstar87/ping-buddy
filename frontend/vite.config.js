@@ -6,9 +6,13 @@ export default defineConfig({
   server: {
     proxy: {
       "/v1/api": {
+        target: "http://localhost:9980", 
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/v1\/api/, ""), 
+        rewrite: (path) => path.replace(/^\/v1\/api/, ""),
+        secure: false, 
+        ws: true,
       },
     },
   },
 });
+
