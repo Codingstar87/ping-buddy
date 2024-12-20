@@ -114,7 +114,7 @@ const forgotPassword = async (req, res) => {
         }
 
         const otp = generateOTP(); 
-        const expiresAt = Date.now() +   30 * 1000; 
+        const expiresAt = Date.now() +   60 * 1000; 
 
         const updatedOTP = await OTP.findOneAndUpdate(
             { email },
